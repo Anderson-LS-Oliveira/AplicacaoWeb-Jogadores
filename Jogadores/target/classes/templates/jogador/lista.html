@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Jogadores</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+        tr.clickable-row {
+            cursor: pointer;
+        }
+        tr.clickable-row:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-base-200 min-h-screen flex flex-col items-center justify-start p-8">
+
+<div class="w-full max-w-6xl flex flex-col items-center">
+
+    <!-- Cabeçalho -->
+    <div class="flex w-full justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-primary">Lista de Jogadores</h1>
+    </div>
+
+    <!-- Caso não haja jogadores -->
+    <div th:if="${#lists.isEmpty(jogadores)}"
+         class="flex flex-col items-center justify-center mt-16 bg-base-100 shadow-2xl rounded-2xl p-10 border border-base-300 max-w-lg w-full text-center">
+
+        <div class="bg-primary/10 rounded-full p-4 mb-6">
+            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                 alt="Nenhum jogador encontrado"
+                 class="w-28 h-28 opacity-90">
+        </div>
+
+        <h2 class="text-3xl font-bold text-primary mb-2">Nenhum Jogador Cadastrado</h2>
+        <p class="text-xl text-gray-600 mb-6">Você ainda não adicionou nenhum jogador.</p>
+
+        <div class="flex flex-col gap-3">
+            <a href="/jogadores/adicionar-jogador"
+               class="btn btn-primary btn-wide text-lg shadow-md hover:shadow-lg transition-all">
+                Adicionar Jogador
+            </a>
+            <a href="/" class="btn btn-outline btn-wide text-lg">
+                Voltar ao Início
+            </a>
+        </div>
+    </div>
+
+    <!-- Caso haja jogadores -->
+    <div th:unless="${#lists.isEmpty(jogadores)}"
+         class="overflow-x-auto w-full max-w-6xl rounded-box border border-base-content/10 bg-base-100 shadow-lg mt-6">
+
+        <div class="flex justify-between mb-4 px-4">
+            <a href="/jogadores/adicionar-jogador" class="btn btn-primary">Novo Jogador</a>
+            <a href="/" class="btn btn-outline">Voltar ao Início</a>
+        </div>
+
+        <table class="table table-zebra w-full text-center">
+            <thead class="bg-base-300 text-lg">
+            <tr>
+                <th>ID</th>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>País</th>
+                <th>Time</th>
+                <th>Idade</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="j : ${jogadores}"
+                class="hover:bg-base-200 transition clickable-row"
+                th:onclick="|window.location='/jogadores/editar/${j.id}'|">
+
+                <td th:text="${j.id}">1</td>
+                <td>
+                    <img th:src="${j.fotoUrl}" alt="Foto do jogador"
+                         class="rounded-full border border-gray-300 shadow-sm w-16 h-16 object-cover mx-auto">
+                </td>
+                <td th:text="${j.nome}" class="font-semibold text-primary">Exemplo</td>
+                <td th:text="${j.pais}">Brasil</td>
+                <td th:text="${j.time}">Real Madrid</td>
+                <td th:text="${j.idade}">25</td>
+                <td>
+                    <a th:href="@{'/jogadores/deletar/' + ${j.id}}"
+                       class="btn btn-sm btn-error text-white"
+                       onclick="event.stopPropagation()">Excluir</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
